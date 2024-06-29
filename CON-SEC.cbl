@@ -1,0 +1,44 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. GEN-SEC.
+       AUTHOR. EDUARDO.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT EMPLEADO ASSIGN TO DISK.
+       
+       DATA DIVISION.
+       FILE SECTION.
+       FD EMPLEADO.
+       01 REG-EMP.
+           03 ID-EMP       PIC 9(03).
+           03 NOMBRE-EMP   PIC X(30).
+           03 CLAVE-DEPTO  PIC 99.
+           03 NOMBRE-DEPTO PIC X(20).
+           03 SUELDO       PIC 9(05)V99.
+           03 FEC-ALTA     PIC 9(08).
+       WORKING-STORAGE SECTION.
+       77 W77-FLAG         PIC 99 VALUE 0.
+       01 WKS-ID-EMP       PIC 9(03).
+       01 WKS-NOMBRE-EMP   PIC X(30).
+       01 WKS-CLAVE-DEPTO  PIC 99.
+       01 WKS-NOMBRE-DEPTO PIC X(20).
+       01 WKS-SUELDO       PIC 9(05)V99.
+       01 WKS-FEC-ALTA     PIC 9(08).
+       01 WKS-DEC-FIN      PIC A(01).
+
+       PROCEDURE DIVISION.
+       INICIO.
+           PERFORM 1000-INICIO.
+           PERFORM 2000-PROCESO UNTIL W77-FLAG = 1.
+           PERFORM 3000-FIN.
+           STOP RUN.
+       1000-INICIO.
+           OPEN INPUT EMPLEADO.
+       2000-PROCESO.
+           READ EMPLEADO
+             AT END MOVE 1 TO W77-FLAG MOVE "S" TO WKS-DEC-FIN.
+           
+           IF WKS-DEC-FIN IS NOT EQUAL TO "S"
+             DISPLAY REG-EMP.
+       3000-FIN.
+           CLOSE EMPLEADO.

@@ -1,0 +1,66 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. GEN-SEC.
+       AUTHOR. EDUARDO.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT EMPLEADO ASSIGN TO DISK.
+       
+       DATA DIVISION.
+       FILE SECTION.
+       FD EMPLEADO.
+       01 REG-EMP.
+           03 ID-EMP       PIC 9(03).
+           03 NOMBRE-EMP   PIC X(30).
+           03 CLAVE-DEPTO  PIC 99.
+           03 NOMBRE-DEPTO PIC X(20).
+           03 SUELDO       PIC 9(05)V99.
+           03 FEC-ALTA     PIC 9(08).
+       WORKING-STORAGE SECTION.
+       01 W77-FLAG         PIC 99 VALUE 0.
+       01 WKS-ID-EMP       PIC 9(03).
+       01 WKS-NOMBRE-EMP   PIC X(30).
+       01 WKS-CLAVE-DEPTO  PIC 99.
+       01 WKS-NOMBRE-DEPTO PIC X(20).
+       01 WKS-SUELDO       PIC 9(05)V99.
+       01 WKS-FEC-ALTA     PIC 9(08).
+       01 WKS-DEC-FIN      PIC A(01).
+       
+       PROCEDURE DIVISION.
+       INICIO.
+           PERFORM 1000-INICIO.
+           PERFORM 2000-PROCESO UNTIL W77-FLAG=1.
+           PERFORM 3000-FIN.
+           STOP RUN.
+       1000-INICIO.
+           OPEN OUTPUT EMPLEADO.
+       2000-PROCESO.
+           DISPLAY "ID DEL EMPLEADO: ".
+           ACCEPT WKS-ID-EMP.
+           DISPLAY "NOMBRE DEL EMPLEADO: ".
+           ACCEPT WKS-NOMBRE-EMP.
+           DISPLAY "CLAVE DEL DEPARTAMENTO (1, 2, 3): ".
+           ACCEPT WKS-CLAVE-DEPTO.
+           DISPLAY "SUELDO DEL EMPLEADO: ".
+           ACCEPT WKS-SUELDO.
+           DISPLAY "FECHA DE ALTA: ".
+           ACCEPT WKS-FEC-ALTA.
+           IF WKS-CLAVE-DEPTO IS EQUAL TO 1
+             MOVE "RECURSOS HUMANOS" TO WKS-NOMBRE-DEPTO.
+           IF WKS-CLAVE-DEPTO IS EQUAL TO 2
+             MOVE "DESARROLLO"       TO WKS-NOMBRE-DEPTO.
+           IF WKS-CLAVE-DEPTO IS EQUAL TO 3
+             MOVE "MARKETING"        TO WKS-NOMBRE-DEPTO.
+           MOVE WKS-ID-EMP       TO ID-EMP.
+           MOVE WKS-NOMBRE-EMP   TO NOMBRE-EMP.
+           MOVE WKS-CLAVE-DEPTO  TO CLAVE-DEPTO.
+           MOVE WKS-NOMBRE-DEPTO TO NOMBRE-DEPTO.
+           MOVE WKS-SUELDO       TO SUELDO.
+           MOVE WKS-FEC-ALTA     TO FEC-ALTA.
+           WRITE REG-EMP.
+           DISPLAY "¿DESEA CAPTURAR OTRO REGISTRO? (S/N): ".
+           ACCEPT WKS-DEC-FIN.
+           IF WKS-DEC-FIN IS EQUAL TO "N"
+             MOVE 1 TO W77-FLAG.
+       3000-FIN.
+           CLOSE EMPLEADO.
